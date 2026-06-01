@@ -3,6 +3,7 @@ package edu.puccm.eict.ClienteHTTP;
 
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
+import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 import java.net.URI;
@@ -13,7 +14,7 @@ import java.util.Scanner;
 
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Scanner scanner = new Scanner(System.in);
         String url;
         String tipo;
@@ -28,9 +29,15 @@ public class Main {
 
             Connection.Response response = Jsoup.connect(url).ignoreContentType(true).execute();
             tipo = response.contentType();
-            IO.println("El tipo es: "+tipo);
+            IO.println("\n");
+            IO.println("1.Tipo de archivo: "+tipo);
 
             if(tipo != null && tipo.startsWith("text/html")){
+                IO.println("2.Total de lineas: "+ totalLineas(url));
+
+
+
+
 
                 return;
             };
@@ -59,5 +66,10 @@ public class Main {
             return false;
         }
 
+    }
+
+    public static int totalLineas(String url) throws IOException {
+        String html = Jsoup.connect(url).ignoreContentType(true).execute().body();
+        return html.split("\\R").length;
     }
 }
