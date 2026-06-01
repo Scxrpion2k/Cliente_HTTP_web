@@ -4,6 +4,8 @@ package edu.puccm.eict.ClienteHTTP;
 import org.jsoup.Connection;
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
+import org.jsoup.nodes.Element;
+import org.jsoup.select.Elements;
 
 import java.io.IOException;
 import java.net.URI;
@@ -34,6 +36,7 @@ public class Main {
 
             if(tipo != null && tipo.startsWith("text/html")){
                 IO.println("2.Total de lineas: "+ totalLineas(url));
+                IO.println("3.Total parrafos: "+totalParrafos(url));
 
 
 
@@ -71,5 +74,11 @@ public class Main {
     public static int totalLineas(String url) throws IOException {
         String html = Jsoup.connect(url).ignoreContentType(true).execute().body();
         return html.split("\\R").length;
+    }
+
+    public static int totalParrafos(String url) throws IOException {
+        Document document = Jsoup.connect(url).get();
+        Elements parrafos = document.select("p");
+        return parrafos.size();
     }
 }
