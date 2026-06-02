@@ -29,19 +29,19 @@ public class Main {
                 IO.println("URL invalida");
             }
 
-            Connection.Response response = Jsoup.connect(url).ignoreContentType(true).execute();
-            tipo = response.contentType();
+            Connection.Response response2 = Jsoup.connect(url).ignoreContentType(true).execute();
+            HttpClient cliente = HttpClient.newHttpClient();
+            HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
+            HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+            tipo = response.headers().firstValue("Content-Type").orElse("");
+
+
             IO.println("\n");
             IO.println("1.Tipo de archivo: "+tipo);
 
-            if(tipo != null && tipo.startsWith("text/html")){
+            if(!tipo.isEmpty() && tipo.startsWith("text/html")){
                 IO.println("2.Total de lineas: "+ totalLineas(url));
                 IO.println("3.Total parrafos: "+totalParrafos(url));
-
-
-
-
-
                 return;
             };
 
