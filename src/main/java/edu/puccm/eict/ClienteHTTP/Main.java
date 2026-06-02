@@ -46,9 +46,11 @@ public class Main {
             IO.println("1.Tipo de archivo: "+tipo);
 
             if(!tipo.isEmpty() && tipo.startsWith("text/html")){
-                IO.println("2.Total de lineas: "+ totalLineas(html));
-                IO.println("3.Total parrafos: "+totalParrafos(document));
-                IO.println("4.Total de imagenes en parrafos: "+ totalImagenesParrafos(document));
+                IO.println("1.Total de lineas: "+ totalLineas(html));
+                IO.println("2.Total parrafos: "+totalParrafos(document));
+                IO.println("3.Total de imagenes en parrafos: "+ totalImagenesParrafos(document));
+                IO.println("4.Total de formularios por el metodo POST: " +totalFormPost(document));
+                IO.println("4.Total de formularios por el metodo GET: " +totalFormGet(document));
                 return;
             };
 
@@ -90,6 +92,18 @@ public class Main {
     public static int totalImagenesParrafos(Document document){
         Elements imagenes = document.select("p img");
         return imagenes.size();
+    }
+
+    public static int totalFormPost(Document document){
+        Elements formularioPOST = document.select("form[method=post]");
+        return formularioPOST.size();
+
+    }
+
+    public static int totalFormGet(Document document){
+        Elements formularioGET = document.select("form[method=get]");
+        return formularioGET.size();
+
     }
 
 
