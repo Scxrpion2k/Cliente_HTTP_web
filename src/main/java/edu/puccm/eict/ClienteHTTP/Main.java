@@ -7,6 +7,7 @@ import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
 
+import javax.print.Doc;
 import java.io.IOException;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -29,19 +30,25 @@ public class Main {
                 IO.println("URL invalida");
             }
 
-            Connection.Response response2 = Jsoup.connect(url).ignoreContentType(true).execute();
             HttpClient cliente = HttpClient.newHttpClient();
             HttpRequest request = HttpRequest.newBuilder().uri(URI.create(url)).GET().build();
             HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
             tipo = response.headers().firstValue("Content-Type").orElse("");
+
+            String body = response.body();
+
+            Document document = Jsoup.parse(body,url);
+
+            String html = document.toString();
 
 
             IO.println("\n");
             IO.println("1.Tipo de archivo: "+tipo);
 
             if(!tipo.isEmpty() && tipo.startsWith("text/html")){
-                IO.println("2.Total de lineas: "+ totalLineas(url));
-                IO.println("3.Total parrafos: "+totalParrafos(url));
+                IO.println("2.Total de lineas: "+ totalLineas(html));
+                IO.println("3.Total parrafos: "+totalParrafos(document));
+                IO.println("4.Total de imagenes en parrafos: "+ totalImagenesParrafos(document));
                 return;
             };
 
@@ -71,14 +78,19 @@ public class Main {
 
     }
 
-    public static int totalLineas(String url) throws IOException {
-        String html = Jsoup.connect(url).ignoreContentType(true).execute().body();
+    public static int totalLineas(String html) throws IOException {
         return html.split("\\R").length;
     }
 
-    public static int totalParrafos(String url) throws IOException {
-        Document document = Jsoup.connect(url).get();
+    public static int totalParrafos(Document document) throws IOException {
         Elements parrafos = document.select("p");
         return parrafos.size();
     }
+
+    public static int totalImagenesParrafos(Document document){
+        Elements imagenes = document.select("p img");
+        return imagenes.size();
+    }
+
+
 }
