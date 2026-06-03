@@ -51,6 +51,7 @@ public class Main {
                 IO.println("4.Total de formularios por el metodo POST: " +totalFormPost(document));
                 IO.println("4.Total de formularios por el metodo GET: " +totalFormGet(document));
                 tipoInput(document);
+                respuestaFormulario(document);
                 return;
             };
 
@@ -131,6 +132,43 @@ public class Main {
             n++;
 
         }
+
+    }
+
+    public static void respuestaFormulario(Document document) throws IOException, InterruptedException {
+        Elements formulario = document.select("form");
+        String metodo;
+        int n = 1;
+
+        IO.println("\n6.Respuesta de formulario por el metodo POST:");
+
+
+            for (Element form : formulario) {
+
+                try {
+
+                    metodo = form.attr("method");
+                    if (metodo.equalsIgnoreCase("post")) {
+                        IO.println("\nFormulario" + "[" + n + "]");
+                        String action = form.absUrl("action");
+
+                        HttpClient cliente = HttpClient.newHttpClient();
+                        HttpRequest request = HttpRequest.newBuilder().uri(URI.create(action)).header("matricula-id", "10154558")
+                                .POST(HttpRequest.BodyPublishers.ofString("asignatura=practica1"))
+                                .build();
+                        HttpResponse<String> response = cliente.send(request, HttpResponse.BodyHandlers.ofString());
+
+                        IO.println("Respuesta: " + response.body());
+
+                    }
+
+                    n++;
+
+                } catch (Exception e){
+                    IO.println("No fue posible procesar este formulario");
+                }
+            }
+
 
     }
 
