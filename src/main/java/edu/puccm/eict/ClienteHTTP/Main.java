@@ -25,7 +25,6 @@ public class Main {
             IO.println("Introduce una URL: ");
             url = scanner.nextLine().trim();
 
-
             if(!esValida(url)){
                 IO.println("URL invalida");
             }
@@ -51,9 +50,9 @@ public class Main {
                 IO.println("3.Total de imagenes en parrafos: "+ totalImagenesParrafos(document));
                 IO.println("4.Total de formularios por el metodo POST: " +totalFormPost(document));
                 IO.println("4.Total de formularios por el metodo GET: " +totalFormGet(document));
+                tipoInput(document);
                 return;
             };
-
 
         } while (!esValida(url));
 
@@ -106,5 +105,33 @@ public class Main {
 
     }
 
+    public static void tipoInput(Document document){
+
+        Elements formularios = document.select("form");
+        IO.println("5.Formularios con sus tipos de input:");
+
+        int n = 1;
+
+        for (Element formulario : formularios){
+
+            IO.println("\nFormulario" +"["+ n + "]");
+
+            Elements inputs = formulario.select("input");
+
+            if(inputs.isEmpty()){
+                IO.println("No se encontraron inpunts en el formulario");
+            }
+
+            for (Element input : inputs){
+                String tipo = input.attr("type");
+                String nombre = input.attr("name");
+
+                IO.println("Nombre: " + nombre + " Tipo: "+tipo);
+            }
+            n++;
+
+        }
+
+    }
 
 }
